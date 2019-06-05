@@ -53,7 +53,7 @@ if (options['tty-mode'] || process.stdin.isTTY) {
 
 function getOptions() {
   var parserOptions = {
-    boolean: ['help', 'lint', 'verbose'],
+    boolean: ['help', 'lint', 'verbose', 'tty-mode'],
     alias: {
       config: 'c',
       detect: 'd',
@@ -151,6 +151,7 @@ function processFiles(files) {
     process.stderr.write(error.stack);
     process.exit(1);
   }).then(c => {
+    c = [].concat.apply([], c);
     var tbchanged = c.filter(isChanged => {
       return isChanged !== undefined;
     }).reduce((a, b) => {
