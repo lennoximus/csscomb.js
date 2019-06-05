@@ -9,6 +9,7 @@
 var fs = require('fs');
 var parseArgs = require('minimist');
 var path = require('path');
+var os = require('os');
 
 var Comb = require('./csscomb');
 var Errors = require('./errors');
@@ -43,7 +44,7 @@ if (options.detect) {
 var config = getConfig();
 comb.configure(config);
 
-if (process.stdin.isTTY) {
+if (options['tty-mode'] || process.stdin.isTTY) {
   processFiles(options._);
 } else {
   processSTDIN();
@@ -52,13 +53,14 @@ if (process.stdin.isTTY) {
 
 function getOptions() {
   var parserOptions = {
-    boolean: ['help', 'lint', 'verbose'],
+    boolean: ['help', 'lint', 'verbose', 'tty-mode'],
     alias: {
       config: 'c',
       detect: 'd',
       lint: 'l',
       help: 'h',
-      verbose: 'v'
+      verbose: 'v',
+      'tty-mode': 't'
     }
   };
   return parseArgs(process.argv.slice(2), parserOptions);
@@ -83,9 +85,12 @@ function displayHelp() {
     '    -h, --help',
     '        Display help message.',
     '    -v, --verbose',
-    '        Whether to print logging info.'
+    '        Whether to print logging info.',
+    '    -t, --tty-mode',
+    '        Run the tool in TTY mode using external app (e.g. IDE).',
+    ''
   ];
-  process.stdout.write(help.join('\n'));
+  process.stdout.write(help.join(os.EOL));
 }
 
 function detectConfig() {
@@ -146,6 +151,7 @@ function processFiles(files) {
     process.stderr.write(error.stack);
     process.exit(1);
   }).then(c => {
+    c = [].concat.apply([], c);
     var tbchanged = c.filter(isChanged => {
       return isChanged !== undefined;
     }).reduce((a, b) => {
@@ -159,7 +165,7 @@ function processFiles(files) {
           `${c.length} file${c.length === 1 ? '' : 's'} processed`,
           `${changed} file${changed === 1 ? '' : 's'} fixed`,
           ''
-          ].join('\n');
+          ].join(os.EOL);
       process.stdout.write(message);
     }
 

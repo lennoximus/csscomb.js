@@ -1,10 +1,10 @@
 'use strict';
 
+if (!global._babelPolyfill)
+  require('@babel/polyfill');
 
-if (!global._babelPolyfill) {
-  require('babel-polyfill');
-}
 let fs = require('fs');
+var os = require('os');
 let gonzales = require('gonzales-pe');
 let minimatch = require('minimatch');
 let Errors = require('./errors');
@@ -146,7 +146,7 @@ class Comb {
         result.push(ln + ' | ' + line);
       }
     }
-    return result.join('\n');
+    return result.join(os.EOL);
   }
 
   /**
@@ -347,8 +347,11 @@ class Comb {
     let filename = options && options.filename || '';
     let context = options && options.context;
     let tree;
+    const lint = this.lint;
 
-    if (!text) return this.lint ? [] : text;
+    if (!text) return new Promise(function(resolve) {
+      resolve(lint ? [] : text);
+    });
 
     if (!syntax) syntax = 'css';
     this.syntax = syntax;
@@ -362,7 +365,7 @@ class Comb {
         let message = filename ? [filename] : [];
         message.push(e.message);
         message.push('CSScomb Core version: ' + version);
-        e.stack = e.message = message.join('\n');
+        e.stack = e.message = message.join(os.EOL);
         throw e;
       }
     });

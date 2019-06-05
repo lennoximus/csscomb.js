@@ -1,5 +1,30 @@
 # Changelog
 
+## 4.3.0 - 2019-03-24
+
+- Updated GPE to v4.2.4
+- Updated list of supported Node version to reflect https://nodejs.org/en/about/releases/
+- Fixed #551
+- [cli] Fixed parsing of tty-mode option as boolean
+
+## 4.2.0 - 2017-06-12
+
+- Fixed - align for flexbox properies (#507)
+- Updated - replace '\n' with os.EOL for terminal output (#524)
+- Updated - vow-fs dependency (#526)
+- Fixed - Add empty new line in the end of cli help text (#516)
+- Fixed - Endless loop with empty files (#506)
+- Added - Include all flexbox properties in config files (#509)
+
+## 4.1.0 - 2017-05-16
+
+- Added new `--tty-mode` option for cli.
+- Fixed an issue with calling gpe methods on non-existing nodes.
+
+## 4.0.1 - 2017-02-28
+
+- Added `babel-polyfill` to dependencies.
+
 ## 4.0.0 - 2017-02-16
 
 - Added note about maintenance mode
